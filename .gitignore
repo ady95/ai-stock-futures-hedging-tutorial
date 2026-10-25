@@ -218,3 +218,9 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# --- 이 책 전용 ---
+# 증권사 API 토큰 캐시·원시 실데이터는 커밋하지 않는다 (약관·보안)
+.cache/
+data/raw/
+outputs/
