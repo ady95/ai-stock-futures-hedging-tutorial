@@ -1,5 +1,9 @@
 # ai-stock-futures-hedging-tutorial
 
+<p align="center">
+  <a href="https://wikidocs.net/book/21830"><img src="assets/book-cover.png" alt="AI로 구현하는 주식 현물·선물 헤지 자동매매 따라하기 표지" width="320"></a>
+</p>
+
 위키독스 책 **「AI로 구현하는 주식 현물·선물 헤지 자동매매 따라하기 — 베이시스 거래부터 LightGBM 동적 헤지와 PPO 강화학습까지」** 의 예제코드 저장소입니다.
 
 - 책: [https://wikidocs.net/book/21830](https://wikidocs.net/book/21830)
