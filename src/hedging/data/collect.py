@@ -64,6 +64,18 @@ def collect_spot(client: KisClient, und_code: str, start: str, end: str, root: P
     return df
 
 
+def collect_dividends(client: KisClient, und_code: str, start: str, end: str, root: Path = RAW) -> pd.DataFrame:
+    out_dir = root / "dividends"
+    out_dir.mkdir(parents=True, exist_ok=True)
+    df = client.dividend_schedule(und_code, start, end)
+    df.to_parquet(out_dir / f"{und_code}.parquet", index=False)
+    return df
+
+
+def load_dividends(und_code: str, root: Path = RAW) -> pd.DataFrame:
+    return pd.read_parquet(root / "dividends" / f"{und_code}.parquet")
+
+
 def load_futures(und_code: str, root: Path = RAW) -> pd.DataFrame:
     files = sorted((root / "futures_daily" / und_code).glob("*.parquet"))
     if not files:

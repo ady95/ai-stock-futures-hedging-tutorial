@@ -43,6 +43,11 @@ uv run python examples/chapter01/03_monte_carlo.py  # 1장 실습
 | 3 | `examples/chapter03/03_collect_daily.py` | 월물별 선물 일봉·현물 일봉 수집(Parquet) | KIS |
 | 3 | `examples/chapter03/04_build_dataset.py` | 최근월물 연속 시계열·품질 리포트·DuckDB | 불필요(수집 후) |
 | 3 | `examples/chapter03/05_kiwoom_crosscheck.py` | 키움 REST 현물 일봉 교차검증(선택) | 키움 |
+| 4 | `examples/chapter04/01_carry_and_implied_rate.py` | 실제 베이시스 vs 보유비용, 역산 금리 | 불필요(수집 후) |
+| 4 | `examples/chapter04/02_dividends_fair_value.py` | 배당 일정 수집, 배당 반영 이론가격 | KIS |
+| 4 | `examples/chapter04/03_mispricing_features.py` | 괴리 분포·틱 단위·반감기 | 불필요(수집 후) |
+| 4 | `examples/chapter04/04_basis_dashboard.py` | Plotly 대시보드 + 정적 그림 | 불필요(수집 후) |
+| 4 | `examples/chapter04/05_implied_dividend.py` | 선물 가격에서 시장 내재 배당 역산 | 불필요(수집 후) |
 
 ## 구조
 

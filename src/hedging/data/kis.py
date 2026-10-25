@@ -158,6 +158,25 @@ class KisClient:
         return _to_frame(rows, cols)
 
 
+    # ---- 배당 (4장) ---------------------------------------------------------
+    def dividend_schedule(self, code: str, start: str, end: str) -> pd.DataFrame:
+        """예탁원정보 배당일정 (tr_id HHKDB669102C0).
+
+        record_date(배당기준일), dps(주당 현금배당금), kind(분기/중간/결산), pay_date.
+        아직 결정되지 않은 배당은 dps=0 으로 온다.
+        """
+        b = self.get("/uapi/domestic-stock/v1/ksdinfo/dividend", "HHKDB669102C0",
+                     {"CTS": "", "GB1": "0", "F_DT": start, "T_DT": end, "SHT_CD": code, "HIGH_GB": ""})
+        rows = b.get("output1") or []
+        df = pd.DataFrame([{
+            "record_date": pd.to_datetime(r["record_date"], format="%Y%m%d"),
+            "dps": float(r["per_sto_divi_amt"] or 0),
+            "kind": r["divi_kind"],
+            "pay_date": pd.to_datetime(r["divi_pay_dt"], format="%Y/%m/%d") if r.get("divi_pay_dt") else pd.NaT,
+        } for r in rows if r.get("stk_kind", "보통") == "보통"])
+        return df.sort_values("record_date").reset_index(drop=True) if len(df) else df
+
+
 def _to_frame(rows: list[dict], cols: dict[str, str]) -> pd.DataFrame:
     df = pd.DataFrame(rows, columns=list(cols)).rename(columns=cols)
     if df.empty:
