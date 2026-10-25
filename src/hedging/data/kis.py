@@ -12,9 +12,10 @@ from __future__ import annotations
 import json
 import os
 import time
-from datetime import datetime
+from datetime import date, datetime, timedelta
 from pathlib import Path
 
+import pandas as pd
 import requests
 
 HOSTS = {
@@ -105,3 +106,67 @@ class KisClient:
             "FHMIF10000000",
             {"FID_COND_MRKT_DIV_CODE": "JF", "FID_INPUT_ISCD": code},
         )["output1"]
+
+    # ---- 일봉 (3장) -----------------------------------------------------------
+    def _paged_daily(self, fetch, start: str, end: str) -> list[dict]:
+        """한 번에 최대 100행만 오므로 종료일을 가장 이른 날짜 전날로 당기며 반복한다."""
+        rows: list[dict] = []
+        d2 = end
+        while d2 >= start:
+            page = [r for r in fetch(start, d2) if r.get("stck_bsop_date")]
+            rows += page
+            if len(page) < 100:
+                break
+            earliest = datetime.strptime(min(r["stck_bsop_date"] for r in page), "%Y%m%d").date()
+            d2 = (earliest - timedelta(days=1)).strftime("%Y%m%d")
+        return rows
+
+    def stock_futures_daily(self, code: str, start: str, end: str) -> pd.DataFrame:
+        """주식선물 일봉 (tr_id FHKIF03020100). 날짜는 YYYYMMDD."""
+
+        def fetch(d1, d2):
+            return self.get(
+                "/uapi/domestic-futureoption/v1/quotations/inquire-daily-fuopchartprice",
+                "FHKIF03020100",
+                {"FID_COND_MRKT_DIV_CODE": "JF", "FID_INPUT_ISCD": code, "FID_INPUT_DATE_1": d1,
+                 "FID_INPUT_DATE_2": d2, "FID_PERIOD_DIV_CODE": "D"},
+            ).get("output2") or []
+
+        rows = self._paged_daily(fetch, start, end)
+        cols = {"stck_bsop_date": "date", "futs_oprc": "open", "futs_hgpr": "high", "futs_lwpr": "low",
+                "futs_prpr": "close", "acml_vol": "volume", "acml_tr_pbmn": "value", "mod_yn": "mod_yn"}
+        return _to_frame(rows, cols)
+
+    def stock_daily(self, code: str, start: str, end: str, adjusted: bool = False) -> pd.DataFrame:
+        """국내주식 일봉 (tr_id FHKST03010100).
+
+        베이시스 계산에는 선물과 같은 기준인 원주가(adjusted=False)를 쓴다. 수정주가는 과거 가격이
+        액면분할 등에 맞춰 바뀌므로 그날의 선물가격과 비교할 수 없다.
+        """
+
+        def fetch(d1, d2):
+            return self.get(
+                "/uapi/domestic-stock/v1/quotations/inquire-daily-itemchartprice",
+                "FHKST03010100",
+                {"FID_COND_MRKT_DIV_CODE": "J", "FID_INPUT_ISCD": code, "FID_INPUT_DATE_1": d1,
+                 "FID_INPUT_DATE_2": d2, "FID_PERIOD_DIV_CODE": "D", "FID_ORG_ADJ_PRC": "0" if adjusted else "1"},
+            ).get("output2") or []
+
+        rows = self._paged_daily(fetch, start, end)
+        cols = {"stck_bsop_date": "date", "stck_oprc": "open", "stck_hgpr": "high", "stck_lwpr": "low",
+                "stck_clpr": "close", "acml_vol": "volume", "acml_tr_pbmn": "value", "mod_yn": "mod_yn"}
+        return _to_frame(rows, cols)
+
+
+def _to_frame(rows: list[dict], cols: dict[str, str]) -> pd.DataFrame:
+    df = pd.DataFrame(rows, columns=list(cols)).rename(columns=cols)
+    if df.empty:
+        return df
+    df["date"] = pd.to_datetime(df["date"], format="%Y%m%d")
+    for c in ("open", "high", "low", "close", "volume", "value"):
+        df[c] = pd.to_numeric(df[c], errors="coerce")
+    return df.drop_duplicates("date").sort_values("date").reset_index(drop=True)
+
+
+def yyyymmdd(d: date) -> str:
+    return d.strftime("%Y%m%d")

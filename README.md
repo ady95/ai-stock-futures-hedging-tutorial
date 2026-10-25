@@ -38,6 +38,11 @@ uv run python examples/chapter01/03_monte_carlo.py  # 1장 실습
 | 2 | `examples/chapter02/02_kis_futures_quote.py` | KIS 현물·주식선물 시세 조회 | KIS |
 | 2 | `examples/chapter02/03_margin_settlement.py` | 일일정산과 추가증거금 | 불필요 |
 | 2 | `examples/chapter02/04_hedge_calculator.py` | 헤지 계약 수·순노출·마진콜 가격 계산기 | 불필요 |
+| 3 | `examples/chapter03/01_auth_token_cache.py` | KIS 실전/모의 인증, 토큰 캐시, 호출 간격 | KIS |
+| 3 | `examples/chapter03/02_code_mapping.py` | 주식선물 단축코드 새/옛 체계 | 불필요 |
+| 3 | `examples/chapter03/03_collect_daily.py` | 월물별 선물 일봉·현물 일봉 수집(Parquet) | KIS |
+| 3 | `examples/chapter03/04_build_dataset.py` | 최근월물 연속 시계열·품질 리포트·DuckDB | 불필요(수집 후) |
+| 3 | `examples/chapter03/05_kiwoom_crosscheck.py` | 키움 REST 현물 일봉 교차검증(선택) | 키움 |
 
 ## 구조
 

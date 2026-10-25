@@ -11,6 +11,8 @@ dependencies = [
     "matplotlib>=3.8",
     "python-dotenv>=1.0",
     "requests>=2.31",
+    "pyarrow>=26.0.0",
+    "duckdb>=2.0.0",
 ]
 
 [dependency-groups]
