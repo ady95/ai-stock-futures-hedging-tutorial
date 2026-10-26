@@ -64,6 +64,11 @@ uv run python examples/chapter01/03_monte_carlo.py  # 1장 실습
 | 7 | `examples/chapter07/02_dynamic_policies.py` | 이동평균·VWAP·변동성 목표 가변 헤지 | 불필요(수집 후) |
 | 7 | `examples/chapter07/03_rebalance_band.py` | 재조정 밴드와 계약 정수화 오차 | 불필요(수집 후) |
 | 7 | `examples/chapter07/04_compare_fixed_dynamic.py` | 같은 평균 h 고정 헤지와 비교(H2), 20종목 강건성 | 불필요(수집 후) |
+| 8 | `examples/chapter08/01_targets_features.py` | 20종목 피처·레이블 패널(급락·방향·변동성) | 불필요(수집 후) |
+| 8 | `examples/chapter08/02_leakage_checks.py` | 무작위 교차검증·미래 피처 누수 비교, 자르기·범위 이탈 점검 | 불필요(수집 후) |
+| 8 | `examples/chapter08/03_model_diagnostics.py` | LightGBM 워크포워드(시드 5개), HAR 기준선, 보정·중요도 | 불필요(수집 후) |
+| 8 | `examples/chapter08/04_hedge_ratio.py` | 예측 → 헤지 비율, 시드 흔들림, 재조정 밴드 | 불필요(수집 후) |
+| 8 | `examples/chapter08/05_oos_compare.py` | 규칙 기반 대비 외표본 비교(H3), 20종목·시드·연도별 | 불필요(수집 후) |
 
 ## 구조
 

@@ -113,3 +113,20 @@ def load_hedge_frame(code: str) -> pd.DataFrame:
     s = pd.read_parquet(f"data/raw/kis/stock_daily/{code}.parquet")[["date", "volume", "value"]]
     f = f.merge(s.rename(columns={"volume": "spot_volume", "value": "spot_value"}), on="date", how="left")
     return f.sort_values("date").reset_index(drop=True)
+
+
+FRONTIER_GRID = np.round(np.arange(0, 1.01, 0.1), 2)
+COMPARE_KEYS = ["연수익%", "연변동성%", "최대낙폭%", "CVaR5%(일)", "최악일%"]
+
+
+def fixed_frontier(df: pd.DataFrame, cfg: HedgeConfig = HedgeConfig(), grid=FRONTIER_GRID) -> pd.DataFrame:
+    """고정 헤지 h=0~1 곡선 (7-4). 동적 정책은 같은 평균 h 의 점과 비교한다."""
+    return pd.DataFrame([{"h": h, **hedge_metrics(run_hedge(df, pd.Series(h, index=df.index), cfg))} for h in grid])
+
+
+def vs_fixed(m: dict, fr: pd.DataFrame) -> dict:
+    """같은 평균 h 의 고정 헤지(보간) 대비 차이(동적 − 고정)와, 같은 변동성에서의 수익 차."""
+    out = {k: round(m[k] - float(np.interp(m["평균 h"], fr["h"], fr[k])), 3) for k in COMPARE_KEYS}
+    order = fr.sort_values("연변동성%")
+    out["같은 변동성 수익 차"] = round(m["연수익%"] - float(np.interp(m["연변동성%"], order["연변동성%"], order["연수익%"])), 2)
+    return out
