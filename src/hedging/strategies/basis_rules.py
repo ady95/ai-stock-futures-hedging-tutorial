@@ -37,6 +37,7 @@ class BasisRuleParams:
     fut_fee: float = 0.00003  # 선물 수수료, 편도 (예시)
     slip_ticks: float = 0.5  # 레그·체결당 슬리피지(호가단위 배수). 0.5 = 반 틱(스프레드의 절반)
     margin_rate: float = 0.36  # 위탁증거금률 — 증거금 기회비용 계산용
+    min_volume: float = 0  # 신호일 최근월물 최소 거래량(계약). 여러 종목으로 넓힐 때 쓴다(6장)
 
 
 def attach_opens(fv: pd.DataFrame, fut_raw: pd.DataFrame, spot_raw: pd.DataFrame) -> pd.DataFrame:
@@ -73,7 +74,7 @@ def run(df: pd.DataFrame, p: BasisRuleParams) -> pd.DataFrame:
     for i, r in rows.iterrows():
         if pos is None:
             ok = (r["usable"] and r["mis_pct"] >= p.entry_pct and r["dte"] >= p.min_dte
-                  and not (p.skip_dividend and r["div"] > 0))
+                  and not (p.skip_dividend and r["div"] > 0) and r["front_volume"] >= p.min_volume)
             if not ok:
                 continue
             d, s_px, f_px = _exec_prices(r, p.exec)
@@ -123,6 +124,7 @@ def _close(pos: dict, d: pd.Timestamp, s_px: float, f_px: float, reason: str, p:
         "entry_basis_pct": (f0 - s0) / s0 * 100, "gross": gross_spot + gross_fut,
         "financing": financing + margin_opp, "fees_tax": fees + tax, "slippage": slippage, "net": net,
         "net_bp": net / notional * 1e4, "notional": notional,
+        "qty": q, "entry_spot": s0, "entry_fut": f0, "exit_spot": s_px, "exit_fut": f_px,
     }
 
 

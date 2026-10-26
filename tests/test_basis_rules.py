@@ -15,6 +15,7 @@ def _toy(mis, spot, fut):
     df = pd.DataFrame({
         "date": dates, "front_code": "A11603", "ltd": dates[-1], "usable": True, "div": 0.0,
         "mis_pct": mis, "dte": list(range(n - 1, -1, -1)), "spot": spot, "front_close": fut, "rate": 0.0,
+        "front_volume": 1_000_000,
     })
     df["next_date"] = df["date"].shift(-1)
     df["next_spot_open"] = df["spot"].shift(-1)

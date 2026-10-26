@@ -54,6 +54,11 @@ uv run python examples/chapter01/03_monte_carlo.py  # 1장 실습
 | 5 | `examples/chapter05/02_two_leg_trades.py` | 현물 매수 + 선물 매도 진입·청산 거래 목록 | 불필요(수집 후) |
 | 5 | `examples/chapter05/03_costs_execution.py` | 체결 가정·비용·유동성 민감도 | 불필요(수집 후) |
 | 5 | `examples/chapter05/04_order_candidates.py` | 주문 후보 신호 생성(JSONL, 주문 미전송) | 불필요(수집 후) |
+| 6 | `examples/chapter06/01_build_universe.py` | 전체 기초자산 데이터셋(KRX 선물 + KIS 현물·배당, 매핑 검증) | KIS·KRX |
+| 6 | `examples/chapter06/02_ledger_backtest.py` | 현물·선물 통합 장부 백테스트, 현금 보유 대비 성과 | 불필요(수집 후) |
+| 6 | `examples/chapter06/03_margin_and_legging.py` | 추가증거금·강제청산, 레그 체결 위험 시뮬레이션 | 불필요(수집 후) |
+| 6 | `examples/chapter06/04_universe_performance.py` | 전체 종목 성과: 연도·시장·유동성·국면별 | 불필요(수집 후) |
+| 6 | `examples/chapter06/05_walkforward_report.py` | 워크포워드 검증·강건성 점검·연구 보고서 | 불필요(수집 후) |
 
 ## 구조
 
