@@ -1,5 +1,6 @@
 from datetime import date
 
+import numpy as np
 import pandas as pd
 import pytest
 
@@ -66,6 +67,15 @@ def test_front_month_rolls_after_ltd():
     assert front[pd.Timestamp("2026-01-09")] == "A11602"
     assert front[pd.Timestamp("2026-02-13")] == "A11603"
     assert int(s["roll"].sum()) == 2
+
+
+def test_dte_for_contract_expiring_after_data_end():
+    fut, spot = _toy()
+    spot = spot[spot["date"] <= "2026-02-27"]  # 데이터가 3월물 만기(03-12) 전에 끝난 상황
+    s = front_month_series(fut, spot, roll_days=0, today=date(2026, 2, 27))
+    last = s.iloc[-1]
+    assert last["front_code"] == "A11603"
+    assert last["dte"] == int(np.busday_count(date(2026, 2, 27), date(2026, 3, 12)))  # 남은 평일 9일
 
 
 def test_roll_days_moves_roll_earlier():

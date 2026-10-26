@@ -52,6 +52,10 @@ def front_month_series(
     cal = pd.DatetimeIndex(sorted(spot["date"].unique()))
     ct = contract_table(fut, today)
     ct["ltd_pos"] = cal.searchsorted(ct["ltd"])
+    # 최종거래일이 데이터 마지막 날보다 뒤면(진행 중인 월물) 남은 평일 수를 더해 위치를 추정한다
+    beyond = ct["ltd"] > cal[-1]
+    ct.loc[beyond, "ltd_pos"] = (len(cal) - 1) + np.busday_count(
+        (cal[-1] + pd.Timedelta(days=1)).date(), (ct.loc[beyond, "ltd"] + pd.Timedelta(days=1)).dt.date.tolist())
     px = fut.set_index(["code", "date"])[["close", "volume"]]
     spot_px = spot.set_index("date")["close"]
 

@@ -50,6 +50,10 @@ uv run python examples/chapter01/03_monte_carlo.py  # 1장 실습
 | 4 | `examples/chapter04/03_mispricing_features.py` | 괴리 분포·틱 단위·반감기 | 불필요(수집 후) |
 | 4 | `examples/chapter04/04_basis_dashboard.py` | Plotly 대시보드 + 정적 그림 | 불필요(수집 후) |
 | 4 | `examples/chapter04/05_implied_dividend.py` | 선물 가격에서 시장 내재 배당 역산 | 불필요(수집 후) |
+| 5 | `examples/chapter05/01_signal_persistence.py` | 괴리 신호 빈도와 다음 날 시가까지의 지속 | 불필요(수집 후) |
+| 5 | `examples/chapter05/02_two_leg_trades.py` | 현물 매수 + 선물 매도 진입·청산 거래 목록 | 불필요(수집 후) |
+| 5 | `examples/chapter05/03_costs_execution.py` | 체결 가정·비용·유동성 민감도 | 불필요(수집 후) |
+| 5 | `examples/chapter05/04_order_candidates.py` | 주문 후보 신호 생성(JSONL, 주문 미전송) | 불필요(수집 후) |
 
 ## 구조
 
