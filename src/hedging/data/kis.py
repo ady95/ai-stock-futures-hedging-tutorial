@@ -158,6 +158,51 @@ class KisClient:
         return _to_frame(rows, cols)
 
 
+    # ---- 분봉 (7~9장 보조, 12장) ------------------------------------------------
+    def _paged_minutes(self, fetch, day: str, start_hour: str) -> list[dict]:
+        """한 번에 100여 행만 오므로 가장 이른 시각 이전으로 당기며 그날 장 시작까지 받는다."""
+        rows, hour = [], start_hour
+        for _ in range(10):
+            page = [r for r in fetch(day, hour) if r.get("stck_bsop_date") == day]
+            if not page:
+                break
+            rows += page
+            earliest = min(r["stck_cntg_hour"] for r in page)
+            if earliest <= "084600" or len(page) < 100:
+                break
+            t = datetime.strptime(day + earliest, "%Y%m%d%H%M%S") - timedelta(minutes=1)
+            hour = t.strftime("%H%M%S")
+        return rows
+
+    def stock_futures_minutes(self, code: str, day: str) -> pd.DataFrame:
+        """주식선물 1분봉 (tr_id FHKIF03020200). 실측상 최근 약 1년만 조회된다."""
+
+        def fetch(d, h):
+            return self.get(
+                "/uapi/domestic-futureoption/v1/quotations/inquire-time-fuopchartprice", "FHKIF03020200",
+                {"FID_COND_MRKT_DIV_CODE": "JF", "FID_INPUT_ISCD": code, "FID_HOUR_CLS_CODE": "60",
+                 "FID_PW_DATA_INCU_YN": "Y", "FID_FAKE_TICK_INCU_YN": "N", "FID_INPUT_DATE_1": d,
+                 "FID_INPUT_HOUR_1": h},
+            ).get("output2") or []
+
+        rows = self._paged_minutes(fetch, day, "154500")
+        return _minute_frame(rows, {"futs_prpr": "close", "futs_oprc": "open", "futs_hgpr": "high",
+                                    "futs_lwpr": "low", "cntg_vol": "volume"})
+
+    def stock_minutes(self, code: str, day: str) -> pd.DataFrame:
+        """주식 1분봉, KRX 시장(tr_id FHKST03010230 주식일별분봉조회). 실측상 최근 약 1년만 조회된다."""
+
+        def fetch(d, h):
+            return self.get(
+                "/uapi/domestic-stock/v1/quotations/inquire-time-dailychartprice", "FHKST03010230",
+                {"FID_COND_MRKT_DIV_CODE": "J", "FID_INPUT_ISCD": code, "FID_INPUT_HOUR_1": h,
+                 "FID_INPUT_DATE_1": d, "FID_PW_DATA_INCU_YN": "Y", "FID_FAKE_TICK_INCU_YN": ""},
+            ).get("output2") or []
+
+        rows = self._paged_minutes(fetch, day, "153000")
+        return _minute_frame(rows, {"stck_prpr": "close", "stck_oprc": "open", "stck_hgpr": "high",
+                                    "stck_lwpr": "low", "cntg_vol": "volume"})
+
     # ---- 배당 (4장) ---------------------------------------------------------
     def dividend_schedule(self, code: str, start: str, end: str) -> pd.DataFrame:
         """예탁원정보 배당일정 (tr_id HHKDB669102C0).
@@ -185,6 +230,16 @@ def _to_frame(rows: list[dict], cols: dict[str, str]) -> pd.DataFrame:
     for c in ("open", "high", "low", "close", "volume", "value"):
         df[c] = pd.to_numeric(df[c], errors="coerce")
     return df.drop_duplicates("date").sort_values("date").reset_index(drop=True)
+
+
+def _minute_frame(rows: list[dict], cols: dict[str, str]) -> pd.DataFrame:
+    if not rows:
+        return pd.DataFrame(columns=["time", *cols.values()])
+    df = pd.DataFrame(rows)
+    out = pd.DataFrame({"time": pd.to_datetime(df["stck_bsop_date"] + df["stck_cntg_hour"], format="%Y%m%d%H%M%S")})
+    for src, dst in cols.items():
+        out[dst] = pd.to_numeric(df[src], errors="coerce")
+    return out.drop_duplicates("time").sort_values("time").reset_index(drop=True)
 
 
 def yyyymmdd(d: date) -> str:

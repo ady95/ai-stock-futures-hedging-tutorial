@@ -45,6 +45,7 @@ uv run python examples/chapter01/03_monte_carlo.py  # 1장 실습
 | 3 | `examples/chapter03/05_kiwoom_crosscheck.py` | 키움 REST 현물 일봉 교차검증(선택) | 키움 |
 | 3 | `examples/chapter03/06_krx_collect.py` | KRX 주식선물 일별매매정보 수집(유가·코스닥) | KRX |
 | 3 | `examples/chapter03/07_krx_analysis.py` | 생존자 편향 규모, KIS 목록 누락, KIS·KRX 교차검증 | 불필요(수집 후) |
+| 3 | `examples/chapter03/08_collect_minutes.py` | 현물·최근월물 1분봉 누적 수집(KIS는 최근 약 1년만 제공) | KIS |
 | 4 | `examples/chapter04/01_carry_and_implied_rate.py` | 실제 베이시스 vs 보유비용, 역산 금리 | 불필요(수집 후) |
 | 4 | `examples/chapter04/02_dividends_fair_value.py` | 배당 일정 수집, 배당 반영 이론가격 | KIS |
 | 4 | `examples/chapter04/03_mispricing_features.py` | 괴리 분포·틱 단위·반감기 | 불필요(수집 후) |
@@ -59,6 +60,10 @@ uv run python examples/chapter01/03_monte_carlo.py  # 1장 실습
 | 6 | `examples/chapter06/03_margin_and_legging.py` | 추가증거금·강제청산, 레그 체결 위험 시뮬레이션 | 불필요(수집 후) |
 | 6 | `examples/chapter06/04_universe_performance.py` | 전체 종목 성과: 연도·시장·유동성·국면별 | 불필요(수집 후) |
 | 6 | `examples/chapter06/05_walkforward_report.py` | 워크포워드 검증·강건성 점검·연구 보고서 | 불필요(수집 후) |
+| 7 | `examples/chapter07/01_fixed_baselines.py` | 무헤지·50%·100% 고정 헤지와 롤오버 비용 | 불필요(수집 후) |
+| 7 | `examples/chapter07/02_dynamic_policies.py` | 이동평균·VWAP·변동성 목표 가변 헤지 | 불필요(수집 후) |
+| 7 | `examples/chapter07/03_rebalance_band.py` | 재조정 밴드와 계약 정수화 오차 | 불필요(수집 후) |
+| 7 | `examples/chapter07/04_compare_fixed_dynamic.py` | 같은 평균 h 고정 헤지와 비교(H2), 20종목 강건성 | 불필요(수집 후) |
 
 ## 구조
 
