@@ -17,6 +17,8 @@ dependencies = [
     "tabulate>=0.10.0",
     "lightgbm>=4.7.0",
     "scikit-learn>=1.9.1",
+    "gymnasium>=1.4.0",
+    "stable-baselines3>=2.9.2",
 ]
 
 [dependency-groups]

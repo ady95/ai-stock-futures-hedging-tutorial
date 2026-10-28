@@ -69,6 +69,11 @@ uv run python examples/chapter01/03_monte_carlo.py  # 1장 실습
 | 8 | `examples/chapter08/03_model_diagnostics.py` | LightGBM 워크포워드(시드 5개), HAR 기준선, 보정·중요도 | 불필요(수집 후) |
 | 8 | `examples/chapter08/04_hedge_ratio.py` | 예측 → 헤지 비율, 시드 흔들림, 재조정 밴드 | 불필요(수집 후) |
 | 8 | `examples/chapter08/05_oos_compare.py` | 규칙 기반 대비 외표본 비교(H3), 20종목·시드·연도별 | 불필요(수집 후) |
+| 9 | `examples/chapter09/01_env_check.py` | Gymnasium 헤지 환경, 행동 매핑, 7장 장부와 손익 일치 | 불필요(수집 후) |
+| 9 | `examples/chapter09/02_reward_design.py` | 보상 항 분해, 비용 이중 차감 점검, 위험 회피 계수 | 불필요(수집 후) |
+| 9 | `examples/chapter09/03_train.py` | PPO(·SAC) 워크포워드 학습, 5개 연도 × 시드 5개 | 불필요(수집 후) |
+| 9 | `examples/chapter09/04_learning_check.py` | 학습 곡선, 학습 구간 대 시험 연도 보상(과적합 점검) | 불필요(수집 후) |
+| 9 | `examples/chapter09/05_compare.py` | PPO 대 LightGBM·규칙 외표본 비교(H4), SAC·분봉 강건성 | 불필요(수집 후) |
 
 ## 구조
 
